@@ -1,0 +1,35 @@
+import xmltodict
+
+def inlezen(filename):
+    with open (filename) as stationslijsten_file:
+        inhoudstation = stationslijsten_file.read()
+        file_dict = xmltodict.parse(inhoudstation)
+        return file_dict
+
+stations_dict = inlezen('stationslijsten.xml')
+stations = stations_dict['Stations']['Station']
+
+
+print("Dit zijn de codes en types van de 4 stations: \n")
+for station in stations:
+    if station is None:
+        continue
+    else:
+        print('{:4} - {}'.format(station.get("Code"),station.get('Type')))
+
+print("\n dit zijn alle stations met één of meer synoniemen: \n")
+lijst_synoniemenStations =[]
+for station in stations:
+    if station is None:
+        continue
+    elif station.get("Synoniemen") is not None:
+        lijst_synoniemenStations += [station]
+
+for station in lijst_synoniemenStations:
+        print('{:4} - {}'.format(station.get("Code"), station.get('Synoniemen')))
+print("\n Dit is de lange naam van elk station:\n")
+for station in stations:
+    if station is None:
+        continue
+    else:
+        print('{:4} - {}'.format(station.get("Code"), station.get("Namen").get("Lang")))
